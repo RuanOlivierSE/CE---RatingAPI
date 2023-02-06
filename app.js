@@ -2,8 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const routes = {
-	events: require('./events'),
-	// Add more routes here...
+	events: require('./routes/events'),
+	matchlogs: require('./routes/matchlogs'),
+	participants: require('./routes/participants'),
 };
 
 const app = express();
@@ -36,38 +37,34 @@ app.get('/', (req, res) => {
 for (const [routeName, routeController] of Object.entries(routes)) {
 	if (routeController.getAll) {
 		app.get(
-			`/api/${routeName}`,
+			`/${routeName}`,
 			makeHandlerAwareOfAsyncErrors(routeController.getAll)
 		);
 	}
 	if (routeController.getById) {
 		app.get(
-			`/api/${routeName}/:id`,
+			`/${routeName}/:id`,
 			makeHandlerAwareOfAsyncErrors(routeController.getById)
 		);
 	}
 	if (routeController.create) {
 		app.post(
-			`/api/${routeName}`,
+			`/${routeName}`,
 			makeHandlerAwareOfAsyncErrors(routeController.create)
 		);
 	}
 	if (routeController.update) {
 		app.put(
-			`/api/${routeName}/:id`,
+			`/${routeName}/:id`,
 			makeHandlerAwareOfAsyncErrors(routeController.update)
 		);
 	}
 	if (routeController.remove) {
 		app.delete(
-			`/api/${routeName}/:id`,
+			`/${routeName}/:id`,
 			makeHandlerAwareOfAsyncErrors(routeController.remove)
 		);
 	}
 }
 
 module.exports = app;
-
-// Reminder of what you are busy with:
-// You got the DB connection running, but you need now look into getting express going for the endpoints.
-// start by just getting a simple "get" running. Then the others can be introduced with their associated logic.
