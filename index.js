@@ -1,6 +1,8 @@
 const app = require('./app');
 const sequelize = require('./models/index');
 const PORT = 8080;
+const swaggerUi = require('swagger-ui-express');
+const apiDocumentation = require('./docs/apidoc.js');
 
 async function assertDatabaseConnectionOk() {
 	console.log(`Checking database connection...`);
@@ -17,11 +19,15 @@ async function assertDatabaseConnectionOk() {
 async function init() {
 	await assertDatabaseConnectionOk();
 
-	console.log(`Starting Sequelize + Express example on port ${PORT}...`);
-
 	app.listen(PORT, () => {
 		console.log(`Express server started on port ${PORT}. Try some routes, such as '/events'.`);
 	});
+
+	// OpenAPI UI
+
+	temp = apiDocumentation.apiDocumentation;
+	console.log(temp);
+	app.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(apiDocumentation.apiDocumentation));
 }
 
 init();

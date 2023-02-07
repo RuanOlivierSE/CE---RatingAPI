@@ -3,9 +3,12 @@ const { DataTypes } = require('sequelize');
 // This function will automatically receive as parameter the Sequelize connection object.
 module.exports = (sequelize) => {
 	return sequelize.define('participant', {
-		score: {
+		ratingMu: {
 			allowNull: false,
-            // Not sure if the score will be an int. So rather using a double.
+			type: DataTypes.DOUBLE
+		},
+		ratingSigma: {
+			allowNull: false,
 			type: DataTypes.DOUBLE
 		}
 	},
