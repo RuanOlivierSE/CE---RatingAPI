@@ -1,5 +1,5 @@
 const Events = require('./events.js');
-const Roles = require('./matchlogs.js');
+const Matchlogs = require('./matchlogs.js');
 
 const apiDocumentation = {
   openapi: '3.0.1',
@@ -49,15 +49,14 @@ const apiDocumentation = {
       get: Events.getEvent,
       put: Events.updateEvent,
     },
-    // roles: {
-    //   post: Roles.createRole,
-    //   get: Roles.getRoles,
-    // },
-    // 'roles/{id}': {
-    //   delete: Roles.deleteRole,
-    //   get: Roles.getRole,
-    //   put: Roles.updateRole,
-    // },
+    '/api/matchlogs': {
+      post: Matchlogs.createMatchlog
+    },
+    '/api/matchlogs/{id}': {
+      delete: Matchlogs.deleteMatchlog,
+      get: Matchlogs.getMatchlog,
+      put: Matchlogs.updateMatchlog,
+    },
   },
   components: {
     securitySchemes: {
@@ -70,8 +69,8 @@ const apiDocumentation = {
      schemas: {
        createEventBody : Events.createEventBody,
        updateEventBody : Events.updateEventBody,
-    //   updateUserBody,
-    //   createOrUpdateRoleBody,
+       createMatchlogBody : Matchlogs.createMatchlogBody,
+       updateMatchlogBody : Matchlogs.updateMatchlogBody,
      },
   },
 };

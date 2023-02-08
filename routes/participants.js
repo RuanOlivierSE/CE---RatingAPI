@@ -1,9 +1,16 @@
-// TODO: all the basic crud operations are here. Some might not be entirely applicable. So might want to delete some of them.
 const { models } = require('../models');
 const { getIdParam } = require('../helpers');
 
-async function getAll(req, res) {
-	const participants = await models.participant.findAll();
+async function getByEvent(req, res) {
+	const id = getIdParam(req);
+	const participants = await models.participant.findAll(
+		{
+			where: {
+				eventId: id
+			}
+		}
+	);
+
 	res.status(200).json(participants);
 };
 
@@ -26,6 +33,8 @@ async function create(req, res) {
 	}
 };
 
+/* We are not really allowing the participants to be directly updated from an endpoint.
+
 async function update(req, res) {
 	const id = getIdParam(req);
 
@@ -41,6 +50,7 @@ async function update(req, res) {
 		res.status(400).send(`Bad request: param ID (${id}) does not match body ID (${req.body.id}).`);
 	}
 };
+*/
 
 async function remove(req, res) {
 	const id = getIdParam(req);
@@ -53,9 +63,8 @@ async function remove(req, res) {
 };
 
 module.exports = {
-	getAll,
+	getByEvent,
 	getById,
 	create,
-	update,
 	remove,
 };

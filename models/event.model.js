@@ -4,7 +4,8 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
 	return sequelize.define('event', {
 		name: {
-			type: DataTypes.STRING
+			type: DataTypes.STRING,
+			allowNull: false
 		}
 	},
     {

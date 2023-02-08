@@ -1,4 +1,3 @@
-// TODO: all the basic crud operations are here. Some might not be entirely applicable. So might want to delete some of them.
 const { models } = require('../models');
 const { getIdParam } = require('../helpers');
 
@@ -9,7 +8,7 @@ async function getAll(req, res) {
 
 async function getById(req, res) {
 	const id = getIdParam(req);
-	const event = await models.event.findByPk(id);
+	const event = await models.event.findByPk(id, {include: models.participant});
 	if (event) {
 		res.status(200).json(event);
 	} else {

@@ -62,4 +62,10 @@ for (const [routeName, routeController] of Object.entries(routes)) {
 	}
 }
 
+// Then the we defined the custom ones that differ from the basic CRUD operations:
+app.get(
+	'/api/getAllParticipantsByEvent/:id',
+	makeHandlerAwareOfAsyncErrors(routes.participants.getAllByEvent)
+);
+
 module.exports = app;

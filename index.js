@@ -24,10 +24,12 @@ async function init() {
 	});
 
 	// OpenAPI UI
-
-	temp = apiDocumentation.apiDocumentation;
-	console.log(temp);
 	app.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(apiDocumentation.apiDocumentation));
 }
 
 init();
+
+// TODO: currently, the deletes & updates don't give an error if that row doesn't exist
+// TODO: currently the updates do not return the updated item. This could be fine, but then you need to update the docs -- they indicate that the obj is returned.
+// TODO: check that the response codes coincide in code and the openapi documentation
+// TODO: Don't forget to add documentation for the "getAllParticipantsByEventID"

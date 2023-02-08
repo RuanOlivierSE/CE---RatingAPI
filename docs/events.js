@@ -164,7 +164,7 @@ const getEvents = {
 
 const getEvent = {
   tags: ['Events'],
-  description: 'Retrieve one event',
+  description: 'Retrieve one event with all its participants',
   operationId: 'getEvent',
   security: [
     {
@@ -223,7 +223,7 @@ const updateEvent = {
   },
   responses: {
     '200': {
-      description: 'Event retrieved successfully!',
+      description: 'Event updated successfully!',
       content: {
         'application/json': {
           schema: {
