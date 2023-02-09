@@ -1,5 +1,9 @@
-const { models } = require('../models');
-const { getIdParam } = require('../helpers');
+import { rate, Rating } from 'ts-trueskill';
+
+import {getIdParam} from '../helpers.js';
+import {sequelize} from '../models/index.js';
+
+const models = sequelize.models;
 
 async function getByEvent(req, res) {
 	const id = getIdParam(req);
@@ -28,29 +32,16 @@ async function create(req, res) {
 	if (req.body.id) {
 		res.status(400).send(`Bad request: ID should not be provided, since it is determined automatically by the database.`)
 	} else {
-		createdParticipant = await models.participant.create(req.body);
+		const defaultRating = new Rating();
+
+		const createdParticipant = await models.participant.create({
+			eventId: req.body.eventId,
+			ratingMu: defaultRating.mu,
+			ratingSigma: defaultRating.sigma
+		});
 		res.status(201).send(createdParticipant);
 	}
 };
-
-/* We are not really allowing the participants to be directly updated from an endpoint.
-
-async function update(req, res) {
-	const id = getIdParam(req);
-
-	// We only accept an UPDATE request if the `:id` param matches the body `id`
-	if (req.body.id === id) {
-		await models.participant.update(req.body, {
-			where: {
-				id: id
-			}
-		});
-		res.status(200).end();
-	} else {
-		res.status(400).send(`Bad request: param ID (${id}) does not match body ID (${req.body.id}).`);
-	}
-};
-*/
 
 async function remove(req, res) {
 	const id = getIdParam(req);
@@ -62,7 +53,7 @@ async function remove(req, res) {
 	res.status(200).end();
 };
 
-module.exports = {
+export {
 	getByEvent,
 	getById,
 	create,

@@ -1,5 +1,9 @@
-const { Sequelize } = require('sequelize');
-const { applyExtraSetup } = require('./extra_setup');
+import {Sequelize} from 'sequelize';
+
+import {applyExtraSetup} from './extra_setup.js';
+import {event} from './event.model.js';
+import {matchlog} from './matchlog.model.js';
+import {participant} from './participant.model.js';
 
 // Really a bad idea to hardcode the connection detials. But for now, they are hardcoded. #yolo
 const sequelize = new Sequelize('CE_MatchRating', 'ruan', 'docker', {
@@ -10,10 +14,9 @@ const sequelize = new Sequelize('CE_MatchRating', 'ruan', 'docker', {
 });
 
 const modelDefiners = [
-	require('./event.model'),
-  require('./matchlog.model'),
-	require('./participant.model'),	
-	// Add more models here if required...
+	event,
+  matchlog,
+  participant
 ];
 
 // We define all models according to their files.
@@ -28,4 +31,4 @@ sequelize.sync({ alter: true })
 .then(() => { console.log("synced db.");}).catch((err) => {console.log("failed to sync db: " + err.message);});
 
 // We export the sequelize connection instance to be used around our app.
-module.exports = sequelize;
+export {sequelize};

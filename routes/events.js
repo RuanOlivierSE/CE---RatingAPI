@@ -1,5 +1,7 @@
-const { models } = require('../models');
-const { getIdParam } = require('../helpers');
+import {sequelize} from '../models/index.js';
+import {getIdParam} from '../helpers.js';
+
+const models = sequelize.models;
 
 async function getAll(req, res) {
 	const events = await models.event.findAll();
@@ -20,7 +22,7 @@ async function create(req, res) {
 	if (req.body.id) {
 		res.status(400).send(`Bad request: ID should not be provided, since it is determined automatically by the database.`)
 	} else {
-		createdEvent = await models.event.create(req.body);
+		const createdEvent = await models.event.create(req.body);
 		res.status(201).send(createdEvent);
 	}
 };
@@ -30,11 +32,13 @@ async function update(req, res) {
 
 	// We only accept an UPDATE request if the `:id` param matches the body `id`
 	if (req.body.id === id) {
-		await models.event.update(req.body, {
+		const dbUpdate = await models.event.update(req.body, {
 			where: {
 				id: id
 			}
 		});
+		console.log(dbUpdate);
+		console.table(dbUpdate);
 		res.status(200).end();
 	} else {
 		res.status(400).send(`Bad request: param ID (${id}) does not match body ID (${req.body.id}).`);
@@ -51,7 +55,7 @@ async function remove(req, res) {
 	res.status(200).end();
 };
 
-module.exports = {
+export {
 	getAll,
 	getById,
 	create,

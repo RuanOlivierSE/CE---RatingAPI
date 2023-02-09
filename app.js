@@ -1,11 +1,7 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+import express from 'express';
+import bodyParser from 'body-parser';
 
-const routes = {
-	events: require('./routes/events'),
-	matchlogs: require('./routes/matchlogs'),
-	participants: require('./routes/participants'),
-};
+import * as routes from './routes/index.js';
 
 const app = express();
 
@@ -68,4 +64,4 @@ app.get(
 	makeHandlerAwareOfAsyncErrors(routes.participants.getAllByEvent)
 );
 
-module.exports = app;
+export { app };

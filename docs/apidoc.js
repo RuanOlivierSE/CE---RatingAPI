@@ -1,5 +1,6 @@
-const Events = require('./events.js');
-const Matchlogs = require('./matchlogs.js');
+import * as Events from './events.js';
+import * as Matchlogs from './matchlogs.js';
+import * as Participants from './participants.js';
 
 const apiDocumentation = {
   openapi: '3.0.1',
@@ -49,6 +50,8 @@ const apiDocumentation = {
       get: Events.getEvent,
       put: Events.updateEvent,
     },
+
+
     '/api/matchlogs': {
       post: Matchlogs.createMatchlog
     },
@@ -56,6 +59,18 @@ const apiDocumentation = {
       delete: Matchlogs.deleteMatchlog,
       get: Matchlogs.getMatchlog,
       put: Matchlogs.updateMatchlog,
+    },
+
+    
+    '/api/participants': {
+      post: Participants.createParticipant
+    },
+    '/api/participants/{id}': {
+      delete: Participants.deleteParticipant,
+      get: Participants.getParticipant,
+    },
+    '/api/getAllParticipantsByEvent/{:id}': {
+      get: Participants.getAllParticipantsByEvent
     },
   },
   components: {
@@ -67,12 +82,13 @@ const apiDocumentation = {
       },
     },
      schemas: {
-       createEventBody : Events.createEventBody,
-       updateEventBody : Events.updateEventBody,
-       createMatchlogBody : Matchlogs.createMatchlogBody,
-       updateMatchlogBody : Matchlogs.updateMatchlogBody,
+      createEventBody : Events.createEventBody,
+      updateEventBody : Events.updateEventBody,
+      createMatchlogBody : Matchlogs.createMatchlogBody,
+      updateMatchlogBody : Matchlogs.updateMatchlogBody,
+      createParticipantBody : Participants.createParticipantBody
      },
   },
 };
 
-module.exports = { apiDocumentation };
+export { apiDocumentation };

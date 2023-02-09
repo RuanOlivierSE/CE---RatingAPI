@@ -192,7 +192,7 @@ const getEvent = {
         },
       },
     },
-    //'404': eventNotFound,
+    '404': eventNotFound,
     '500': internalServerError,
   },
 };
@@ -308,4 +308,4 @@ const deleteEvent = {
   },
 };
 
-module.exports = { createEvent, createEventBody, deleteEvent, getEvents, getEvent, updateEventBody, updateEvent };
+export { createEvent, createEventBody, deleteEvent, getEvents, getEvent, updateEventBody, updateEvent };

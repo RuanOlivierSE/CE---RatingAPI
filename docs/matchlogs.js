@@ -356,4 +356,4 @@ const deleteMatchlog = {
     },
 };
 
-module.exports = { createMatchlog, createMatchlogBody, deleteMatchlog, getMatchlog, updateMatchlogBody, updateMatchlog };
+export { createMatchlog, createMatchlogBody, deleteMatchlog, getMatchlog, updateMatchlogBody, updateMatchlog };
