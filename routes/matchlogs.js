@@ -1,5 +1,6 @@
 import {sequelize} from '../models/index.js';
 import {getIdParam, hasDuplicates} from '../helpers.js';
+import {rateTeams} from '../rating/index.js';
 
 const models = sequelize.models;
 
@@ -18,10 +19,13 @@ async function create(req, res) {
 		res.status(400).send('Bad request: ID should not be provided, since it is determined automatically by the database.');
 	} else {
 		try {
+			// validate the request body.
 			var participants = await validateMatchlogBody(req.body);
-
-			// TODO: Will need to add logic here to calculate the new rating -- take note that the participants was returned with above method.
+			// save the matchlog to the db
 			var createdMatchlog = await models.matchlog.create(req.body);
+			// calculate the team ratings and update the relevant participants.
+			rateTeams(req.body.teams, participants, req.body.higherIsBetter);
+			
 			res.status(201).send(createdMatchlog);
 		} catch (error) {
 			res.status(400).send(error.message);

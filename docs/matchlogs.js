@@ -111,6 +111,10 @@ const createMatchlogBody = {
             type: 'int',
             example: '1'
         },
+        higherIsBetter: {
+            type: 'boolean',
+            example: 'true'
+        },
         teams: {
             type: 'array',
             items: {
