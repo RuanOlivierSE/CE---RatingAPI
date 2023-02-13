@@ -31,11 +31,18 @@ const exampleMatchlogObject = {
     },
     createdAt: {
         type: 'string',
+        format: 'date-time',
         example: '2023-02-07T13:46:16.168Z',
     },
     updatedAt: {
         type: 'string',
+        format: 'date-time',
         example: '2023-02-07T13:46:16.168Z',
+    },
+    deletedAt: {
+        type: 'string',
+        format: 'date-time',
+        example: null
     }
 };
 
@@ -65,7 +72,7 @@ const matchlogNotFound = {
                 properties: {
                     message: {
                         type: 'string',
-                        example: 'Matchlog with id: "1" not found',
+                        example: 'Matchlog with id 1 was not found',
                     },
                 },
             },
@@ -160,13 +167,9 @@ const updateMatchlogBody = {
 
 const createMatchlog = {
     tags: ['Matchlogs'],
-    description: 'Create a new matchlog. Once added to the DB, the ratings for the particular event will be updated.',
+    description: 'Create a new matchlog. Once added to the DB, the ratings for relevant participants will be updated.',
     operationId: 'createMatchlog',
-    security: [
-        {
-            bearerAuth: [],
-        },
-    ],
+    security: security,
     requestBody: {
         content: {
             'application/json': {
@@ -198,11 +201,7 @@ const getMatchlog = {
     tags: ['Matchlogs'],
     description: 'Retrieve one matchlog on id.',
     operationId: 'getMatchlog',
-    security: [
-        {
-            bearerAuth: [],
-        },
-    ],
+    security: security,
     parameters: [
         {
             name: 'id',
@@ -224,7 +223,7 @@ const getMatchlog = {
                 },
             },
         },
-        //'404': matchlogNotFound,
+        '404': matchlogNotFound,
         '500': internalServerError,
     },
 };
@@ -265,7 +264,7 @@ const updateMatchlog = {
                 },
             },
         },
-        //'404': matchlogNotFound,
+        '404': matchlogNotFound,
         '400': {
             description: 'Invalid Data provided',
             content: {
@@ -282,22 +281,6 @@ const updateMatchlog = {
                 },
             },
         },
-        '401': {
-            description: 'Invalid Data provided',
-            content: {
-                'application/json': {
-                    schema: {
-                        type: 'object',
-                        properties: {
-                            message: {
-                                type: 'string',
-                                example: 'Bad request: Body is invalid.',
-                            },
-                        },
-                    },
-                },
-            },
-        },
         '500': internalServerError,
     },
 };
@@ -306,11 +289,7 @@ const deleteMatchlog = {
     tags: ['Matchlogs'],
     description: 'Delete a matchlog',
     operationId: 'deleteMatchlog',
-    security: [
-        {
-            bearerAuth: [],
-        },
-    ],
+    security: security,
     parameters: [
         {
             name: 'id',
@@ -330,29 +309,15 @@ const deleteMatchlog = {
                         properties: {
                             message: {
                                 type: 'string',
-                                example: 'Matchlog deleted successfully!',
+                                example: '',
                             },
                         },
                     },
                 },
             },
         },
-        '500': {
-            description: 'Internal Server Error',
-            content: {
-                'application/json': {
-                    schema: {
-                        type: 'object',
-                        properties: {
-                            message: {
-                                type: 'string',
-                                example: 'Internal Server Error',
-                            },
-                        },
-                    },
-                },
-            },
-        },
+        '404': matchlogNotFound,
+        '500': internalServerError
     },
 };
 

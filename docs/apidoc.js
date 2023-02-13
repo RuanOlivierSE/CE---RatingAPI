@@ -69,7 +69,7 @@ const apiDocumentation = {
       delete: Participants.deleteParticipant,
       get: Participants.getParticipant,
     },
-    '/api/getAllParticipantsByEvent/{:id}': {
+    '/api/getAllParticipantsByEvent/{id}': {
       get: Participants.getAllParticipantsByEvent
     },
   },

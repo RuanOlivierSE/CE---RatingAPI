@@ -24,7 +24,7 @@ async function getById(req, res) {
 	if (participant) {
 		res.status(200).json(participant);
 	} else {
-		res.status(404).send('404 - Not found');
+		res.status(404).send(`Participant with id ${id} was not found`);
 	}
 };
 
@@ -34,6 +34,7 @@ async function create(req, res) {
 	} else {
 		const defaultRating = new Rating();
 
+		// TODO: Perhaps we want to check eventId exists? Currently, it gives internal server error...
 		const createdParticipant = await models.participant.create({
 			eventId: req.body.eventId,
 			ratingMu: defaultRating.mu,
@@ -44,13 +45,22 @@ async function create(req, res) {
 };
 
 async function remove(req, res) {
+	// TODO: What are the consequences of deleting a participant?
+	// e.g. what happens if we have a matchlog with a participant who later gets deleted. When a matchlog is updated and
+	// rating is recalculated from the ground up, it could potentially cause issues!
 	const id = getIdParam(req);
-	await models.participant.destroy({
+	const dbResponse = await models.participant.destroy({
 		where: {
 			id: id
 		}
 	});
-	res.status(200).end();
+
+	if(dbResponse > 0){
+		res.status(200).end();
+	}
+	else{
+		res.status(404).send(`Participant with id ${id} was not found`);
+	}	
 };
 
 export {

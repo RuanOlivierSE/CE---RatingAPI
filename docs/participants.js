@@ -17,11 +17,18 @@ const exampleParticipantObject = {
     },
     createdAt: {
         type: 'string',
-        example: '2023-02-07T13:46:16.168Z',
+        format: 'date-time',
+        example: '2023-02-07T13:46:16.168Z'
     },
     updatedAt: {
         type: 'string',
-        example: '2023-02-07T13:46:16.168Z',
+        format: 'date-time',
+        example: '2023-02-07T13:46:16.168Z'
+    },
+    deletedAt: {
+        type: 'string',
+        format: 'date-time',
+        example: null
     }
 };
 
@@ -51,7 +58,7 @@ const participantNotFound = {
                 properties: {
                     message: {
                         type: 'string',
-                        example: 'Participant with id: "1" not found',
+                        example: `Participant with id 1 was not found`,
                     },
                 },
             },
@@ -97,11 +104,7 @@ const createParticipant = {
     tags: ['Participants'],
     description: 'Create a new Participant.',
     operationId: 'createParticipant',
-    security: [
-        {
-            bearerAuth: [],
-        },
-    ],
+    security: security,
     requestBody: {
         content: {
             'application/json': {
@@ -133,11 +136,7 @@ const getParticipant = {
     tags: ['Participants'],
     description: 'Retrieve one participant on id.',
     operationId: 'getParticipant',
-    security: [
-        {
-            bearerAuth: [],
-        },
-    ],
+    security: security,
     parameters: [
         {
             name: 'id',
@@ -159,25 +158,21 @@ const getParticipant = {
                 },
             },
         },
-        //'404': participantNotFound,
+        '404': participantNotFound,
         '500': internalServerError,
     },
 };
 
-const deleteParticipant= {
+const deleteParticipant = {
     tags: ['Participants'],
     description: 'Delete a participant',
     operationId: 'deleteParticipant',
-    security: [
-        {
-            bearerAuth: [],
-        },
-    ],
+    security: security,
     parameters: [
         {
             name: 'id',
             in: 'path',
-            description: 'Matchlog ID',
+            description: 'Participant ID',
             required: true,
             type: 'string',
         },
@@ -192,13 +187,14 @@ const deleteParticipant= {
                         properties: {
                             message: {
                                 type: 'string',
-                                example: 'Partcipant deleted successfully!',
+                                example: '',
                             },
                         },
                     },
                 },
             },
         },
+        '404': participantNotFound,
         '500': {
             description: 'Internal Server Error',
             content: {
@@ -222,11 +218,7 @@ const getAllParticipantsByEvent = {
     tags: ['Participants'],
     description: 'Retrieve all participants for a specific event.',
     operationId: 'getParticipantsByEvent',
-    security: [
-        {
-            bearerAuth: [],
-        },
-    ],
+    security: security,
     parameters: [
         {
             name: 'id',
@@ -238,20 +230,19 @@ const getAllParticipantsByEvent = {
     ],
     responses: {
         '200': {
-            description: 'Participant retrieved successfully!',
+            description: 'Participants retrieved successfully!',
             content: {
                 'application/json': {
                     schema: {
                         type: 'array',
                         items: {
-                          type: 'object',
-                          properties: exampleParticipantObject,
+                            type: 'object',
+                            properties: exampleParticipantObject,
                         },
-                      },
+                    },
                 },
             },
         },
-        //'404': participantNotFound,
         '500': internalServerError,
     },
 };

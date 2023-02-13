@@ -9,13 +9,86 @@ const exampleEventObject = {
   },
   createdAt: {
     type: 'string',
+    format: 'date-time',
     example: '2023-02-07T13:46:16.168Z',
   },
   updatedAt: {
     type: 'string',
+    format: 'date-time',
     example: '2023-02-07T13:46:16.168Z',
   },
+  deletedAt: {
+    type: 'string',
+    format: 'date-time',
+    example: null
+  }
 };
+
+const exampleEventWithParticipants = {
+  id: {
+    type: 'int',
+    example: '1',
+  },
+  name: {
+    type: 'string',
+    example: 'Annual Table Tennis Tournament 2023',
+  },
+  createdAt: {
+    type: 'string',
+    format: 'date-time',
+    example: '2023-02-07T13:46:16.168Z',
+  },
+  updatedAt: {
+    type: 'string',
+    format: 'date-time',
+    example: '2023-02-07T13:46:16.168Z',
+  },
+  deletedAt: {
+    type: 'string',
+    format: 'date-time',
+    example: null
+  },
+  participants: {
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'int',
+          example: 1
+        },
+        eventId: {
+          type: 'int',
+          example: 1
+        },
+        ratingMu: {
+          type: 'double',
+          example: 13.2
+        },
+        ratingSigma: {
+          type: 'double',
+          example: 2.0
+        },
+        createdAt: {
+          type: 'string',
+          format: 'date-time',
+          example: '2023-02-07T13:46:16.168Z'
+        },
+        updatedAt: {
+          type: 'string',
+          format: 'date-time',
+          example: '2023-02-07T13:46:16.168Z'
+        },
+        deletedAt: {
+          type: 'string',
+          format: 'date-time',
+          example: null
+        }
+      },
+    }
+  }
+};
+
 
 const internalServerError = {
   description: 'Internal Server Error',
@@ -35,7 +108,7 @@ const internalServerError = {
 };
 
 const eventNotFound = {
-  description: 'Resource not found',
+  description: 'Error: Not Found',
   content: {
     'application/json': {
       schema: {
@@ -43,7 +116,7 @@ const eventNotFound = {
         properties: {
           message: {
             type: 'string',
-            example: 'Event with id: "1" not found',
+            example: `Event with id 1 was not found`
           },
         },
       },
@@ -102,11 +175,7 @@ const createEvent = {
   tags: ['Events'],
   description: 'Create a new event',
   operationId: 'createEvent',
-  security: [
-    {
-      bearerAuth: [],
-    },
-  ],
+  security: security,
   requestBody: {
     content: {
       'application/json': {
@@ -138,11 +207,7 @@ const getEvents = {
   tags: ['Events'],
   description: 'Retrieve all the events',
   operationId: 'getEvents',
-  security: [
-    {
-      bearerAuth: [],
-    },
-  ],
+  security: security,
   responses: {
     '200': {
       description: 'Events retrieved successfully!',
@@ -166,11 +231,7 @@ const getEvent = {
   tags: ['Events'],
   description: 'Retrieve one event with all its participants',
   operationId: 'getEvent',
-  security: [
-    {
-      bearerAuth: [],
-    },
-  ],
+  security: security,
   parameters: [
     {
       name: 'id',
@@ -187,7 +248,7 @@ const getEvent = {
         'application/json': {
           schema: {
             type: 'object',
-            properties: exampleEventObject,
+            properties: exampleEventWithParticipants,
           },
         },
       },
@@ -233,7 +294,6 @@ const updateEvent = {
         },
       },
     },
-    //'404': eventNotFound,
     '400': {
       description: 'Invalid Data provided',
       content: {
@@ -250,6 +310,7 @@ const updateEvent = {
         },
       },
     },
+    '404': eventNotFound,
     '500': internalServerError,
   },
 };
@@ -258,11 +319,7 @@ const deleteEvent = {
   tags: ['Events'],
   description: 'Delete an event',
   operationId: 'deleteEvent',
-  security: [
-    {
-      bearerAuth: [],
-    },
-  ],
+  security: security,
   parameters: [
     {
       name: 'id',
@@ -273,7 +330,7 @@ const deleteEvent = {
     },
   ],
   responses: {
-    '200': {
+    '201': {
       description: 'Event deleted successfully!',
       content: {
         'application/json': {
@@ -282,29 +339,15 @@ const deleteEvent = {
             properties: {
               message: {
                 type: 'string',
-                example: 'Event deleted successfully!',
+                example: '',
               },
             },
           },
         },
       },
     },
-    '500': {
-      description: 'Internal Server Error',
-      content: {
-        'application/json': {
-          schema: {
-            type: 'object',
-            properties: {
-              message: {
-                type: 'string',
-                example: 'Internal Server Error',
-              },
-            },
-          },
-        },
-      },
-    },
+    '404': eventNotFound,
+    '500': internalServerError,
   },
 };
 

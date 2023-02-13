@@ -6,7 +6,11 @@ function applyExtraSetup(sequelize) {
             allowNull: false 
         }
     });
-    participant.belongsTo(event);
+    participant.belongsTo(event, { 
+        foreignKey: { 
+            allowNull: false 
+        }
+    });
 
     // setup the the one-to-many relationship between event and matchlog.
     event.hasMany(matchlog, { 
@@ -14,7 +18,11 @@ function applyExtraSetup(sequelize) {
             allowNull: false 
         }
     });
-    matchlog.belongsTo(event);
+    matchlog.belongsTo(event, { 
+        foreignKey: { 
+            allowNull: false 
+        }
+    });
 }
 
 export { applyExtraSetup };

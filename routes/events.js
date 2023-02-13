@@ -14,7 +14,7 @@ async function getById(req, res) {
 	if (event) {
 		res.status(200).json(event);
 	} else {
-		res.status(404).send('404 - Not found');
+		res.status(404).send(`Event with id ${id} was not found`);
 	}
 };
 
@@ -32,14 +32,22 @@ async function update(req, res) {
 
 	// We only accept an UPDATE request if the `:id` param matches the body `id`
 	if (req.body.id === id) {
-		const dbUpdate = await models.event.update(req.body, {
+		const dbResponse = await models.event.update(req.body, {
 			where: {
 				id: id
-			}
+			},
+			returning: true,
+			raw: true
 		});
-		console.log(dbUpdate);
-		console.table(dbUpdate);
-		res.status(200).end();
+		// the first entry in the db response is the number of affected rows.
+		if(dbResponse[0] > 0){
+			// the second entry in the db response is an array of the affected rows.
+			// making the assumption that this will only be 1, since the WHERE is on a PK.
+			res.status(200).send(dbResponse[1][0]);
+		}
+		else{
+			res.status(404).send(`Event with id ${id} was not found`);
+		}
 	} else {
 		res.status(400).send(`Bad request: param ID (${id}) does not match body ID (${req.body.id}).`);
 	}
@@ -47,12 +55,20 @@ async function update(req, res) {
 
 async function remove(req, res) {
 	const id = getIdParam(req);
-	await models.event.destroy({
+
+	// the dbResponse will be the number of rows deleted.
+	const dbResponse = await models.event.destroy({
 		where: {
 			id: id
 		}
 	});
-	res.status(200).end();
+
+	if(dbResponse > 0){
+		res.status(201).end();
+	}
+	else{
+		res.status(404).send(`Event with id ${id} was not found`);
+	}	
 };
 
 export {
